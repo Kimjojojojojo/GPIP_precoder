@@ -13,6 +13,7 @@ R = calc.cov_h_perfect(K, N, delta) # cov. matrix of h
 
 h = calc.ch_generation(R) # channel generation
 
+#### I love you Eunyeong
 
 print(h)
 
