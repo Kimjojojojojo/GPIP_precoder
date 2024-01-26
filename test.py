@@ -1,3 +1,7 @@
 import numpy as np
-pi = np.pi
-print(pi)
+
+a = np.zeros((1, 3, 1))
+b = np.zeros((1, 1, 3))
+
+print(a)
+print(b)
