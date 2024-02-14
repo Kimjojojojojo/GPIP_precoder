@@ -8,6 +8,7 @@ def SNR_sweep(SNR_range, function_values):
     plt.title('Ergodic Sum-Spectral Efficiency under imperfect CSIT')
     plt.xlabel('SNR (dB)')
     plt.ylabel('Ergodic Sum-Spectral Efficiency [bps/Hz]')
+    plt.ylim(0,10)
     plt.legend()
     plt.grid(True)
     plt.show()

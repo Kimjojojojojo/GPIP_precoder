@@ -33,49 +33,108 @@ def ch_generation(R, J):
     K = np.size(R,0)
     N = np.size(R, 1)
 
-    x = np.zeros((J, K, N))
+    x = np.zeros((J, K, N, 1))
     mean = np.zeros(N)
     for j in range(J):
         for k in range(K):
-            x[j][k] = np.random.multivariate_normal(mean, R[k], 1)
+            x[j][k] = np.transpose(np.random.multivariate_normal(mean, R[k], 1))
 
     return x
+
+def interference_ch_generation(R, J, beta):
+    K = np.size(R,0)
+    N = np.size(R, 1)
+
+    h = np.zeros((J, J, K, N))
+    mean = np.zeros(N)
+    for j in range(J):
+        for l in range(J):
+            if j == l:
+                continue
+            for k in range(K):
+                h[j][l][k] = np.random.multivariate_normal(mean, beta * R[k], 1)
+
+    return h
+
+def rayleigh_ch_generation(R, J):
+    K = np.size(R,0)
+    N = np.size(R, 1)
+
+    h = np.zeros((J, K, N, 1), dtype=complex)
+    mean = np.zeros(N)
+    for j in range(J):
+        for k in range(K):
+            h[j][k] = (np.random.normal(0, 1, (N,1)) + 1j*np.random.normal(0, 1, (N,1)))/np.sqrt(2)
+
+    return h
 
 def error_generation(PHI, J, K):
     N = np.size(PHI, 0)
 
-    x = np.zeros((J, K, N))
+    x = np.zeros((J, K, N, 1),dtype=complex)
     mean = np.zeros(N)
     for j in range(J):
         for k in range(K):
-            x[j][k] = np.random.multivariate_normal(mean, PHI, 1)
+            x[j][k] = np.transpose((np.random.multivariate_normal(mean, PHI, 1) + 1j*np.random.multivariate_normal(mean, PHI, 1))/np.sqrt(2))
 
     return x
 
-def spectral_efficiency(h_hat_llk, f_l, PHI_llk, sigma_tilde, P, s):
-    J = np.size(h_hat_llk, 0)
-    K = np.size(h_hat_llk, 1)
-    N = np.size(h_hat_llk, 2)
+def spectral_efficiency(h_llk, h_llk_interference, f_l, PHI_llk, sigma_tilde, P, s):
+    J = np.size(h_llk, 0)
+    K = np.size(h_llk, 1)
+    N = np.size(h_llk, 2)
 
-    f_lk = np.zeros((J, K, N, 1))
-    f_H_lk = np.zeros((J, K, 1, N))
+    f_lk = np.zeros((J, K, N, 1),dtype=complex)
     for j in range(J):
         for k in range(K):
             f_lk[j][k] = f_l[j][k*N:(k+1)*N]
-            f_H_lk[j][k] = np.conjugate(f_lk[j][k]).T
 
-    h_H_hat_llk = np.zeros((J, K, N))
-    for j in range(J):
-        for k in range(K):
-            h_H_hat_llk[j][k] = np.conjugate(h_hat_llk[j][k]).T
-
+    #print(f_lk[0][0])
     R = np.zeros((J,K))
     for j in range(J):
         for k in range(K):
-            a = abs(h_H_hat_llk[j][k] @ f_lk[j][k])**2
-            b = sum([abs(h_H_hat_llk[j][k] @ f_lk[j][i])**2 for i in range(K)]) - a
-            c = sum([abs(f_H_lk[j][i] @ PHI_llk @f_lk[j][i])**2 for i in range(K)])
+            h = h_llk[j][k]
+            h_H = np.conjugate(h).T
+            #print(h_H[j][k])
+            #print(f_lk[j][k])
+            a = abs(h_H @ f_lk[j][k])**2
+            #print('GPIPa=',a)
+            b = sum([abs(h_H @ f_lk[j][i])**2 for i in range(K)]) - a
+            #print('GPIPb=', b)
+            # c = 0
+            # for l in range(J):
+            #     if l == j:
+            #         continue
+            #     c = sum([abs(np.conjugate(h_llk_interference[j][l][k]).T @ f_lk[j][i])**2 for i in range(K)])
             d = 1/s
-            R[j][k] = np.log2(1 + a/(b+ c+ d))
+            R[j][k] = np.log2(1 + a/(b + d))
+
+    return R
+
+def spectral_efficiency_ZF(h_llk, h_llk_interference, f_lk, PHI_llk, sigma_tilde, P, s):
+    J = np.size(h_llk, 0)
+    K = np.size(h_llk, 1)
+    N = np.size(h_llk, 2)
+
+    R = np.zeros((J, K))
+    for j in range(J):
+        for k in range(K):
+            h = h_llk[j][k]
+            h_H = np.conjugate(h).T
+            a = abs(h_H @ f_lk[j][k]) ** 2
+
+            #print('ZFa=',a)
+            #print([abs(h_H @ f_lk[j][i]) ** 2 for i in range(K)])
+            b = sum([abs(h_H @ f_lk[j][i]) ** 2 for i in range(K)]) - a
+            #print('ZFb=',b)
+            # c = 0
+            # for l in range(J):
+            #     if l == j:
+            #         continue
+            #     c = sum([abs(np.conjugate(h_llk_interference[j][l][k]).T @ f_lk[j][i])**2 for i in range(K)])
+            d = 1 / s
+            #print('ZFd=',d)
+            #print('x=',1 + a / (b + d))
+            R[j][k] = np.log2(1 + a / (b + d))
 
     return R
