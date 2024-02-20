@@ -6,9 +6,9 @@ import GPIP
 import precoders
 import plot
 
-N = 64 # number of antenna
+N = 10 # number of antenna
 J = 1 # number of BSs
-K = 64 # number of UEs in each BS
+K = 10 # number of UEs in each BS
 
 pi = np.pi
 delta = pi / 6
@@ -49,7 +49,7 @@ for m in range(M):
 
         e_llk = calc.error_generation(PHI_llk, J, K) # error vector generation h :(J X (K X (NX1)))
 
-        h_hat_llk = h_llk + e_llk
+        h_hat_llk = h_llk
         #print('--------------------------------')
         #####GPIP with covariance matrix#####
 
@@ -98,11 +98,11 @@ R_tmp_MRT_sample_average = R_tmp_MRT_sample_sum / M
 
 ##### plot #####
 plt.figure(figsize=(10, 6))
-plt.plot(SNR_dB_range, R_tmp_with_cov_sample_average, color = 'red')
-plt.scatter(SNR_dB_range, R_tmp_with_cov_sample_average, label ='GPIP (with cov.)', edgecolors = 'red', marker = 'o', facecolor='none',s=100)
+#plt.plot(SNR_dB_range, R_tmp_with_cov_sample_average, color = 'red')
+#plt.scatter(SNR_dB_range, R_tmp_with_cov_sample_average, label ='GPIP (with cov.)', edgecolors = 'red', marker = 'o', facecolor='none',s=100)
 
-plt.plot(SNR_dB_range, R_tmp_without_cov_sample_average,  color = 'skyblue')
-plt.scatter(SNR_dB_range, R_tmp_without_cov_sample_average, label ='GPIP (without cov.)',edgecolors = 'skyblue', marker = 'o', facecolor='none',s=100)
+plt.plot(SNR_dB_range, R_tmp_without_cov_sample_average,  color = 'red')
+plt.scatter(SNR_dB_range, R_tmp_without_cov_sample_average, label ='GPIP',edgecolors = 'red', marker = 'o', facecolor='none',s=100)
 
 plt.plot(SNR_dB_range, R_tmp_ZF_sample_average, color = 'black')
 plt.scatter(SNR_dB_range, R_tmp_ZF_sample_average,  label = 'ZF',edgecolors = 'black', marker= 's', facecolor='none', s=100)
@@ -110,7 +110,7 @@ plt.scatter(SNR_dB_range, R_tmp_ZF_sample_average,  label = 'ZF',edgecolors = 'b
 plt.plot(SNR_dB_range, R_tmp_MRT_sample_average,  color = 'black')
 plt.scatter(SNR_dB_range, R_tmp_MRT_sample_average, label = 'MRT',color = 'black', marker= 'x', s=100)
 
-plt.title('Ergodic Sum-Spectral Efficiency Under Imperfect CSIT')
+plt.title('Ergodic Sum-Spectral Efficiency Under Perfect CSIT')
 plt.xlabel('SNR (dB)')
 plt.ylabel('Ergodic Sum-Spectral Efficiency [bps/Hz]')
 plt.ylim(0,60)
