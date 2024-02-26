@@ -55,7 +55,6 @@ for m in range(M):
 
         f_l_tmp_GPIP_with_cov, num_iterend_GPIP_with_cov = GPIP.precoder_generation(h_hat_llk, PHI_llk, P, sigma_tilde,                                                                     num_iter, epsilon, s)# pre-coder generation f : (J X (K X N))
         f_l_GPIP_with_cov = f_l_tmp_GPIP_with_cov[num_iterend_GPIP_with_cov]
-        #print("f_l_with_cov=",np.linalg.norm(f_l_GPIP_with_cov)**2)
         R_GPIP_with_cov = calc.spectral_efficiency(h_llk, h_llk_interference, f_l_GPIP_with_cov, PHI_llk, sigma_tilde, P, s) # data rate R : (J X K)
         R_sum_GPIP_with_cov = sum(sum(R_GPIP_with_cov))
         R_tmp_GPIP_with_cov[idx] = R_sum_GPIP_with_cov
