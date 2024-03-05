@@ -75,7 +75,7 @@ def error_generation(PHI, J, K):
     mean = np.zeros(N)
     for j in range(J):
         for k in range(K):
-            x[j][k] = np.transpose((np.random.multivariate_normal(mean, PHI, 1) + 1j*np.random.multivariate_normal(mean, PHI, 1))/np.sqrt(2))
+            x[j][k] = np.transpose((np.random.multivariate_normal(mean, PHI[k], 1) + 1j*np.random.multivariate_normal(mean, PHI[k], 1))/np.sqrt(2))
 
     return x
 

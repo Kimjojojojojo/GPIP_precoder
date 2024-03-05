@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 import calc
 import GPIP
 import precoders
+import FDD_CH as FDD
 import plot
 
-N = 64 # number of antenna
+N = 10 # number of antenna
 J = 1 # number of BSs
-K = 64 # number of UEs in each BS
+K = 10 # number of UEs in each BS
+L= 3
 
 pi = np.pi
 delta = pi / 6
@@ -17,6 +19,9 @@ P = 10
 num_iter = 30
 epsilon = 0.1
 beta = 0.1 # large-scale fading parameter
+
+lambda_ul = 7.125
+lambda_dl = 8
 
 R_llk = calc.cov_h_perfect(K, N, delta) # cov. matrix of h : (K X (N X N))
 
@@ -44,13 +49,23 @@ for m in range(M):
     print("-----",m+1,"th sample-----")
     for idx, s in enumerate(SNR_range): # SNR sweep
         print('SNR : ', SNR_dB_range[idx])
-        h_llk = calc.rayleigh_ch_generation(R_llk, J) # channel generation h :(J X (K X (NX1)))
+        #h_llk = calc.rayleigh_ch_generation(R_llk, J) # channel generation h :(J X (K X (NX1)))
         h_llk_interference = calc.interference_ch_generation(R_llk, J, beta)
 
-        e_llk = calc.error_generation(PHI_llk, J, K) # error vector generation h :(J X (K X (NX1)))
+        #e_llk = calc.error_generation(PHI_llk, J, K) # error vector generation h :(J X (K X (NX1)))
 
+        #### FDD system
+        H, H_MMSE, H_L_MMSE, _, _, c, PHI_MMSE, PHI_L_MMSE = FDD.FDD_CH_estimatior(K, L, N, lambda_ul,
+                                                                                   lambda_dl,
+                                                                                   lambda_ul / 2)
+
+        h_llk = np.zeros((J, K, N, 1), dtype=complex)
+        h_llk[0] = H
+        e_llk = calc.error_generation(PHI_MMSE, J, K)
         h_hat_llk = h_llk + e_llk
         #print('--------------------------------')
+
+
         #####GPIP with covariance matrix#####
 
         f_l_tmp_GPIP_with_cov, num_iterend_GPIP_with_cov = GPIP.precoder_generation(h_hat_llk, PHI_llk, P, sigma_tilde,                                                                     num_iter, epsilon, s)# pre-coder generation f : (J X (K X N))
@@ -109,7 +124,7 @@ plt.scatter(SNR_dB_range, R_tmp_ZF_sample_average,  label = 'ZF',edgecolors = 'b
 plt.plot(SNR_dB_range, R_tmp_MRT_sample_average,  color = 'black')
 plt.scatter(SNR_dB_range, R_tmp_MRT_sample_average, label = 'MRT',color = 'black', marker= 'x', s=100)
 
-plt.title('Ergodic Sum-Spectral Efficiency Under Imperfect CSIT')
+plt.title('Ergodic Sum-Spectral Efficiency Under Imperfect CSIT(L_MMSE estimator)')
 plt.xlabel('SNR (dB)')
 plt.ylabel('Ergodic Sum-Spectral Efficiency [bps/Hz]')
 plt.ylim(0,60)
