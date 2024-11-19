@@ -44,7 +44,7 @@ R_tmp_MRT = np.zeros(len_SNR)
 R_tmp_MRT_sample_sum = np.zeros(len_SNR)
 
 ##### sample average iteration #####
-M = 100 # sample number
+M = 10 # sample number
 for m in range(M):
     print("-----",m+1,"th sample-----")
     for idx, s in enumerate(SNR_range): # SNR sweep

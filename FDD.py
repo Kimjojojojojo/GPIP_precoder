@@ -7,7 +7,7 @@ K = 1 # number of users
 L = 3 # number of multi-path
 N = 4 # number of antennas
 
-M = 100 # sample number
+M = 10 # sample number
 
 C = 0.3 # freq. of light [GHz]
 
@@ -74,18 +74,18 @@ for n in range(n_f):
 # plt.plot(Band_range[0], MSE_MMSE_average[0], label ='MMSE' ,color = 'red')
 # plt.plot(Band_range[0], MSE_L_MMSE_average[0], label ='L-MMSE' ,color = 'blue')
 plt.plot(Band_range[0], MSE_average[0], label ='7.125~9.125[GHz]' ,color = 'blue')
-plt.plot(Band_range[0], L_MSE_average[0], linestyle = '--',color = 'blue')
-# plt.plot(Band_range[1], MSE_average[1], label ='10~12[GHz]' ,color = 'pink')
-# plt.plot(Band_range[1], L_MSE_average[1], linestyle = '--' ,color = 'pink')
-# plt.plot(Band_range[2], MSE_average[2], label ='14.3~16.3[GHz]' ,color = 'blue')
-# plt.plot(Band_range[2], L_MSE_average[2], linestyle = '--' ,color = 'blue')
-# plt.plot(Band_range[3], MSE_average[3], label ='17.7~19.7[GHz]' ,color = 'green')
-# plt.plot(Band_range[3], L_MSE_average[3], linestyle = '--',color = 'green')
-# plt.plot(Band_range[4], MSE_average[4], label ='21.2~23.2[GHz' ,color = 'skyblue')
-# plt.plot(Band_range[4], L_MSE_average[4], linestyle = '--' ,color = 'skyblue')
+# plt.plot(Band_range[0], L_MSE_average[0], linestyle = '--',color = 'blue')
+plt.plot(Band_range[1], MSE_average[1], label ='10~12[GHz]' ,color = 'pink')
+#plt.plot(Band_range[1], L_MSE_average[1], linestyle = '--' ,color = 'red')
+plt.plot(Band_range[2], MSE_average[2], label ='14.3~16.3[GHz]' ,color = 'red')
+#plt.plot(Band_range[2], L_MSE_average[2], linestyle = '--' ,color = 'blue')
+plt.plot(Band_range[3], MSE_average[3], label ='17.7~19.7[GHz]' ,color = 'green')
+#plt.plot(Band_range[3], L_MSE_average[3], linestyle = '--',color = 'green')
+plt.plot(Band_range[4], MSE_average[4], label ='21.2~23.2[GHz]' ,color = 'skyblue')
+#plt.plot(Band_range[4], L_MSE_average[4], linestyle = '--' ,color = 'skyblue')
 
-plt.plot(Band_range[0], MSE_MMSE_average[0], label ='7.125~9.125[GHz]' ,color = 'red')
-plt.plot(Band_range[0], MSE_L_MMSE_average[0], linestyle = '--',color = 'red')
+# plt.plot(Band_range[0], MSE_MMSE_average[0], label ='7.125~9.125[GHz]' ,color = 'red')
+# plt.plot(Band_range[0], MSE_L_MMSE_average[0], linestyle = '--',color = 'red')
 # plt.plot(Band_range[1], MSE_MMSE_average[1], label ='10~12[GHz]' ,color = 'pink')
 # plt.plot(Band_range[1], MSE_L_MMSE_average[1], linestyle = '--' ,color = 'pink')
 # plt.plot(Band_range[2], MSE_MMSE_average[2], label ='14.3~16.3[GHz]' ,color = 'blue')
